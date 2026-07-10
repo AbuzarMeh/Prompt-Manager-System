@@ -1,5 +1,6 @@
 package com.ats.prompt_service.service.impl;
 
+import com.ats.prompt_service.exception.PromptNotFoundException;
 import com.ats.prompt_service.entity.Prompt;
 import com.ats.prompt_service.repository.PromptRepository;
 import com.ats.prompt_service.service.PromptService;
@@ -29,14 +30,22 @@ public class PromptServiceImpl implements PromptService {
 
     @Override
     public Prompt getPromptById(UUID id) {
+
         return promptRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prompt not found with id: " + id));
+                .orElseThrow(() ->
+                        new PromptNotFoundException(
+                                "Prompt not found with id: " + id
+                        ));
     }
 
     @Override
     public Prompt updatePrompt(UUID id, Prompt updatedPrompt) {
 
-        Prompt existingPrompt = getPromptById(id);
+        Prompt existingPrompt = promptRepository.findById(id)
+        .orElseThrow(() ->
+                new PromptNotFoundException(
+                        "Prompt not found with id: " + id
+                ));
 
         existingPrompt.setName(updatedPrompt.getName());
         existingPrompt.setDescription(updatedPrompt.getDescription());
@@ -50,8 +59,12 @@ public class PromptServiceImpl implements PromptService {
     @Override
     public void deletePrompt(UUID id) {
 
-        Prompt existingPrompt = getPromptById(id);
+        if (!promptRepository.existsById(id)) {
+            throw new PromptNotFoundException(
+                    "Prompt not found with id: " + id
+            );
+        }
 
-        promptRepository.delete(existingPrompt);
+        promptRepository.deleteById(id);
     }
 }
