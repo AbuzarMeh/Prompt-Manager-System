@@ -1,9 +1,12 @@
 package com.ats.prompt_service.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -14,16 +17,22 @@ public class Prompt {
     @UuidGenerator
     private UUID id;
 
+    @NotBlank(message = "Prompt name cannot be empty")
+    @Size(max = 100, message = "Prompt name cannot exceed 100 characters")
     @Column(nullable = false)
     private String name;
 
+    @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
+    @NotBlank(message = "Prompt content cannot be empty")
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Size(max = 255, message = "Tags cannot exceed 255 characters")
     private String tags;
 
+    @Size(max = 100, message = "Model target cannot exceed 100 characters")
     private String modelTarget;
 
     private LocalDateTime createdAt;
@@ -33,7 +42,9 @@ public class Prompt {
     public Prompt() {
     }
 
-    public Prompt(UUID id, String name, String description, String content, String tags, String modelTarget, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Prompt(UUID id, String name, String description, String content,
+                  String tags, String modelTarget,
+                  LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
