@@ -31,14 +31,6 @@ public class PromptController {
                 .body(createdPrompt);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Prompt>> getAllPrompts() {
-
-        return ResponseEntity.ok(
-                promptService.getAllPrompts()
-        );
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Prompt> getPromptById(
             @PathVariable UUID id) {
@@ -65,6 +57,18 @@ public class PromptController {
         promptService.deletePrompt(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Prompt>> getPrompts(
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) Integer limit) {
+
+        if (tag == null && limit == null) {
+            return ResponseEntity.ok(promptService.getAllPrompts());
+        }
+
+        return ResponseEntity.ok(promptService.getPrompts(tag, limit));
     }
 
 }

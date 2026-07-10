@@ -29,6 +29,24 @@ public class PromptServiceImpl implements PromptService {
     }
 
     @Override
+    public List<Prompt> getPrompts(String tag, Integer limit) {
+
+        List<Prompt> prompts;
+
+        if (tag != null && !tag.isBlank()) {
+            prompts = promptRepository.findByTagsContainingIgnoreCase(tag);
+        } else {
+            prompts = getAllPrompts();   // Reuse the existing method
+        }
+
+        if (limit != null && limit > 0 && limit < prompts.size()) {
+            prompts = prompts.subList(0, limit);
+        }
+
+        return prompts;
+    }
+
+    @Override
     public Prompt getPromptById(UUID id) {
 
         return promptRepository.findById(id)

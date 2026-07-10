@@ -12,6 +12,8 @@ public interface PromptService {
 
     List<Prompt> getAllPrompts();
 
+    List<Prompt> getPrompts(String tag, Integer limit);
+    
     Prompt getPromptById(UUID id);
 
     Prompt updatePrompt(UUID id, Prompt prompt);
